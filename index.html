@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>CCS Internship 2025</title>
 
 <style>
@@ -41,14 +43,62 @@ body{
     z-index:10;
 }
 
+#introModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    /*padding: 20px;  important for mobile spacing */
+}
+
+.modal-content {
+    background: #0d1117;
+    color: white;
+    padding: 30px;
+    width: 600px;
+    max-width: 100%;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    font-family: "Century Gothic", "Arial", sans-serif;
+}
+
+@media (max-width: 768px) {
+
+    .modal-content {
+        width: 95%;
+        padding: 25px;
+        border-radius: 16px;
+    }
+
+    .modal-content h2 {
+        font-size: 22px;
+    }
+
+    .modal-content p {
+        font-size: 16px;
+    }
+
+    .modal-content button {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+    }
+}
+
 </style>
 
 </head>
 
 <body>
-<div id="introModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:9999;">
-    <div style="background:#0d1117;color:white;padding:30px;max-width:500px;border-radius:12px;font-family:Arial;text-align:center;box-shadow:0px 0px 30px rgba(0,0,0,0.5);">
-
+<div id="introModal">
+    <div class="modal-content">
         <h2>🎓 Internship Journey Gallery</h2>
 
         <p style="line-height:1.6;">
@@ -83,11 +133,14 @@ let scene,camera,renderer,controls;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let hoveredObject = null;
+let lastTap = 0;
+const doubleTapDelay = 300;
 
 const hoverText = document.getElementById("hoverText");
 
 init();
 animate();
+
 
 function init(){
 
@@ -199,6 +252,8 @@ function createGalleryFrames(){
     const radius = 8;
     const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
+    
+
     galleryData.forEach((item,i)=>{
 
         const texture = loader.load(item.img);
@@ -302,6 +357,39 @@ function addMouseInteraction(){
             }
         }
 
+    });
+
+    renderer.domElement.addEventListener("touchend", (event) => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+
+        if (tapLength < doubleTapDelay && tapLength > 0) {
+          
+            const touch = event.changedTouches[0];
+
+            mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+
+            if (intersects.length > 0) {
+                const obj = intersects[0].object;
+
+                if(obj.userData.link){
+                    const confirmRedirect = confirm(
+                        "Continue to "+obj.userData.title+"’s blog site?"
+                    );
+
+                    if(confirmRedirect){                                            
+                        window.location.href = obj.userData.link;
+                    }
+                }
+            }
+
+        }
+
+        lastTap = currentTime;
     });
 }
 
