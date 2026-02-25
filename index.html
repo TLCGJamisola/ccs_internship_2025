@@ -54,7 +54,7 @@ body{
         <p style="line-height:1.6;">
             This website showcases the journey of College of Computer Studies interns during their internship experience.
             <br><br>
-            Each image frame represents an intern and redirects to their personal webpage story describing their internship journey, experiences, and learnings.
+            Each image frame represents an intern and redirects to their personal webpage story describing their internship journey, experiences, and learnings. Double-click on an image frame to open the site.
         </p>
 
         <button onclick="closeIntroModal()" style="margin-top:20px;padding:10px 20px;border:none;border-radius:8px;background:#4da6ff;color:white;cursor:pointer;font-size:16px;">
@@ -65,7 +65,7 @@ body{
 </div>
 
 <div id="instructions" style="position:fixed;top:20px;right:20px;color:black;font-family:Arial;font-size:12px;background:rgba(255,255,255,0.85);padding:10px 16px;border-radius:8px;z-index:20;text-align:center;">
-🖱️ Drag to rotate • Scroll to zoom • Click to open blog sites
+🖱️ Drag to rotate • Scroll to zoom • Double Click to open blog sites
 </div>
 
 
@@ -277,7 +277,7 @@ function addMouseInteraction(){
 
     });
 
-    window.addEventListener("click",()=>{
+    window.addEventListener("dblclick",()=>{
 
         raycaster.setFromCamera(mouse,camera);
 
